@@ -1,3 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'platform/dags/*', 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dags/']
+options:
+  logging: 'CLOUD_LOGGING_ONLY'  # Specify your desired logging option
+  logsBucket: 'europe-central2-tmdb-compos-5a03652c-bucket'
