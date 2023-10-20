@@ -1,3 +1,10 @@
 steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'platform/dags/*', 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dags/']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args:
+      - '-m'
+      - 'cp'
+      - '-r'
+      - 'platform/*'
+      - 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dependencies/'
