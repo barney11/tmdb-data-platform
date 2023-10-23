@@ -1,7 +1,3 @@
-imports:
-  - name: google.cloud.functions
-      version: latest
-
 main:
   steps:
     - invoke-data-extraction:

@@ -1,6 +1,7 @@
 requests
 google-cloud-storage
 google-cloud-bigquery
+google-cloud-workflows
 google-api-core
 python-decouple
 
