@@ -19,5 +19,4 @@ These steps are scheduled with an Airflow DAG, using google cloud composer.
 ## Manage your API Keys
 
 ---
-Note :
 _This project was developed by listening to the album "Looping", a collaboration between Rone and the Orchestre National de Lyon._
