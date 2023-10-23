@@ -1,16 +1,22 @@
 main:
   steps:
     - invoke-data-extraction:
-        call: google.cloud.functions.call
+        call: http.get
         args:
-          function: 'extract_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/extract_data_function'
+          auth:
+            type: OIDC
 
     - invoke-data-migration:
-        call: google.cloud.functions.call
+        call: http.get
         args:
-          function: 'migrate_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/migrate_data_function'
+          auth:
+            type: OIDC
 
     - invoke-data-transformation:
-        call: google.cloud.functions.call
+        call: http.get
         args:
-          function: 'transform_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/transform_data_function'
+          auth:
+            type: OIDC
