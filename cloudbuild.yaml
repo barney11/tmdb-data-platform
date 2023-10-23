@@ -1,11 +1,65 @@
-steps:
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args:
-      - '-m'
-      - 'cp'
-      - '-r'
-      - 'platform/'
-      - 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dependencies/'
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'platform/dags/*', 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dags/']
+# steps:
+#   steps:
+#   # Build docker image
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 'gcr.io/your-project/your-image:latest', '.']
+#     dir: 'path/to/your/repository'
+#   # Push docker image
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 'gcr.io/your-project/your-image:latest']
+#   # Copy DAG file in the appropriate bucket
+#   - name: 'gcr.io/cloud-builders/gsutil'
+#     args: ['cp', 'platform/dags/*', 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dags/']
   
+
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Install your package from GitHub
+    pip install git+https://github.com/barney11/tmdb-data-platform.git@main
+  id: 'install-package'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Deploy your Cloud Function
+    gcloud functions deploy extract_data_function \
+      --runtime python38 \
+      --trigger-http \
+      --entry-point extract_data_function \
+      --source platform/scripts/ \
+      --allow-unauthenticated
+  id: 'deploy-data-extraction-function'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Deploy your Cloud Function
+    gcloud functions deploy migrate_data_function \
+      --runtime python38 \
+      --trigger-http \
+      --entry-point migrate_data_function \
+      --source platform/scripts/ \
+      --allow-unauthenticated
+  id: 'deploy-data-extraction-function'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Deploy your Cloud Function
+    gcloud functions deploy transform_data_function \
+      --runtime python38 \
+      --trigger-http \
+      --entry-point transform_data_function \
+      --source platform/scripts/ \
+      --allow-unauthenticated
+  id: 'deploy-data-extraction-function'
