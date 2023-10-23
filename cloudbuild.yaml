@@ -1,26 +1,4 @@
-# steps:
-#   steps:
-#   # Build docker image
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['build', '-t', 'gcr.io/your-project/your-image:latest', '.']
-#     dir: 'path/to/your/repository'
-#   # Push docker image
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['push', 'gcr.io/your-project/your-image:latest']
-#   # Copy DAG file in the appropriate bucket
-#   - name: 'gcr.io/cloud-builders/gsutil'
-#     args: ['cp', 'platform/dags/*', 'gs://europe-central2-tmdb-compos-5a03652c-bucket/dags/']
-  
-
 steps:
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   entrypoint: 'bash'
-#   args:
-#   - '-c'
-#   - |
-#     apt-get update && apt-get install -y python3-pip
-#     pip install git+https://github.com/barney11/tmdb-data-platform.git@main
-#   id: 'install-package'
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
@@ -33,7 +11,7 @@ steps:
       --entry-point extract_data_function \
       --source platform/ \
       --allow-unauthenticated \
-      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
+      --set-env-vars _TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, _GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, _GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-extraction-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -47,7 +25,7 @@ steps:
       --entry-point migrate_data_function \
       --source platform/ \
       --allow-unauthenticated \
-      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
+      --set-env-vars _TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, _GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, _GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-migration-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -61,7 +39,7 @@ steps:
       --entry-point transform_data_function \
       --source platform/ \
       --allow-unauthenticated \
-      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
+      --set-env-vars _TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, _GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, _GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-transformation-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
