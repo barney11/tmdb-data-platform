@@ -60,3 +60,11 @@ steps:
       --source platform/scripts/ \
       --allow-unauthenticated
   id: 'deploy-data-transformation-function'
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
+
