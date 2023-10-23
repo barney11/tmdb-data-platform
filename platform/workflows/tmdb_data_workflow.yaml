@@ -1,16 +1,16 @@
 main:
   steps:
-    - name: 'invoke-data-extraction'
+    - invoke-data-extraction:
       call: google.cloud.functions.call
       args:
         function: 'extract_data_function'
 
-    - name: 'invoke-data-migration'
+    - invoke-data-migration:
       call: google.cloud.functions.call
       args:
         function: 'migrate_data_function'
 
-    - name: 'invoke-data-transformation'
+    - invoke-data-transformation:
       call: google.cloud.functions.call
       args:
         function: 'transform_data_function'
