@@ -17,7 +17,7 @@
 
 from scripts.extract_data import extract_tmdb_data
 from scripts.migrate_data import create_bigquery_tables
-from script.transform_data import create_curated_tables
+from scripts.transform_data import create_curated_tables
 
 
 def extract_data_function():
