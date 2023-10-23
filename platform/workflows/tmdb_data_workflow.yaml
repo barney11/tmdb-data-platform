@@ -1,14 +1,20 @@
-- invoke-data-extraction:
-    call: google.cloud.functions.call
-    args:
-      function: 'extract_data_function'
+imports:
+  - name: google.cloud.functions
+      version: latest
 
-- invoke-data-migration:
-    call: google.cloud.functions.call
-    args:
-      function: 'migrate_data_function'
+main:
+  steps:
+    - invoke-data-extraction:
+        call: google.cloud.functions.call
+        args:
+          function: 'extract_data_function'
 
-- invoke-data-transformation:
-    call: google.cloud.functions.call
-    args:
-      function: 'transform_data_function'
+    - invoke-data-migration:
+        call: google.cloud.functions.call
+        args:
+          function: 'migrate_data_function'
+
+    - invoke-data-transformation:
+        call: google.cloud.functions.call
+        args:
+          function: 'transform_data_function'
