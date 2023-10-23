@@ -32,7 +32,8 @@ steps:
       --trigger-http \
       --entry-point extract_data_function \
       --source platform/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-extraction-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -45,7 +46,8 @@ steps:
       --trigger-http \
       --entry-point migrate_data_function \
       --source platform/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-migration-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -58,7 +60,8 @@ steps:
       --trigger-http \
       --entry-point transform_data_function \
       --source platform/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --set-env-vars TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}, GCP_CREDENTIALS_JSON=${{ secrets.GCP_CREDENTIALS_JSON }}, GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON=${{ secrets.GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON }}
   id: 'deploy-data-transformation-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
