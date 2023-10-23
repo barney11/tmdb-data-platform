@@ -32,7 +32,8 @@ steps:
       --trigger-http \
       --entry-point extract_data_function \
       --source platform/scripts/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --logging=NONE
   id: 'deploy-data-extraction-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -45,7 +46,8 @@ steps:
       --trigger-http \
       --entry-point migrate_data_function \
       --source platform/scripts/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --logging=NONE
   id: 'deploy-data-migration-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -58,7 +60,8 @@ steps:
       --trigger-http \
       --entry-point transform_data_function \
       --source platform/scripts/ \
-      --allow-unauthenticated
+      --allow-unauthenticated \
+      --logging=NONE
   id: 'deploy-data-transformation-function'
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -66,5 +69,5 @@ steps:
   args:
   - '-c'
   - |
-    gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
+    gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml --logging=NONE
 
