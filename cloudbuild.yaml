@@ -69,4 +69,4 @@ steps:
     gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
 
 options :
-  logging: NONE
+  logging: CLOUD_LOGGING_ONLY
