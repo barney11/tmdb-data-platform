@@ -31,7 +31,7 @@ steps:
       --runtime python38 \
       --trigger-http \
       --entry-point extract_data_function \
-      --source . \
+      --source platform/ \
       --allow-unauthenticated
   id: 'deploy-data-extraction-function'
 
@@ -44,7 +44,7 @@ steps:
       --runtime python38 \
       --trigger-http \
       --entry-point migrate_data_function \
-      --source . \
+      --source platform/ \
       --allow-unauthenticated
   id: 'deploy-data-migration-function'
 
@@ -57,7 +57,7 @@ steps:
       --runtime python38 \
       --trigger-http \
       --entry-point transform_data_function \
-      --source . \
+      --source platform/ \
       --allow-unauthenticated
   id: 'deploy-data-transformation-function'
 
