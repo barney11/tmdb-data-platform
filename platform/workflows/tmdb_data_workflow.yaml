@@ -5,18 +5,18 @@ main:
         args:
           url: 'https://us-central1-movies-data-platform.cloudfunctions.net/extract_data_function'
           auth:
-            type: OIDC
+            type: NONE
 
     - invoke-data-migration:
         call: http.get
         args:
           url: 'https://us-central1-movies-data-platform.cloudfunctions.net/migrate_data_function'
           auth:
-            type: OIDC
+            type: NONE
 
     - invoke-data-transformation:
         call: http.get
         args:
           url: 'https://us-central1-movies-data-platform.cloudfunctions.net/transform_data_function'
           auth:
-            type: OIDC
+            type: NONE
