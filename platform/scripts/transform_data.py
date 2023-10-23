@@ -24,7 +24,7 @@ from decouple import config
 logger = logging.getLogger(__name__)
 
 
-GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = config("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
 
 AVG_VOTES_ORDERED_QUERY = f"""

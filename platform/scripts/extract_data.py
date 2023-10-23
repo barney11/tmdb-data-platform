@@ -20,12 +20,12 @@ from decouple import config
 
 
 # Define TMDb API information
-TMDB_API_KEY = config("TMDB_API_KEY") #"d274a3c0c4dffc5f520a2356280b8198"
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
 # Define GCP bucket information
 GCP_BUCKET_NAME = "movies-bucket-11"
-GCP_CREDENTIALS_JSON = config("GCP_CREDENTIALS_JSON")
+GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
 
 # Set a logger for this module
 logger = logging.getLogger(__name__)

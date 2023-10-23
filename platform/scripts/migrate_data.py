@@ -28,8 +28,8 @@ from decouple import config
 logger = logging.getLogger(__name__)
 
 
-GCP_CREDENTIALS_JSON = config("GCP_CREDENTIALS_JSON")
-GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = config("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
+GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
 
 # Function to create a table from a JSON file
