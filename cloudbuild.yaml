@@ -18,6 +18,7 @@ steps:
   args:
   - '-c'
   - |
+    apt-get update && apt-get install -y python3-pip
     pip install git+https://github.com/barney11/tmdb-data-platform.git@main
   id: 'install-package'
 
