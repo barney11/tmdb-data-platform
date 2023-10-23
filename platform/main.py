@@ -13,26 +13,26 @@
 
 """Cloud functions file."""
 
-# from requests import request
+from requests import request
 
 from scripts.extract_data import extract_tmdb_data
 from scripts.migrate_data import create_bigquery_tables
 from scripts.transform_data import create_curated_tables
 
 
-def extract_data_function():
+def extract_data_function(request):
     """Data extraction cloud function"""
 
     extract_tmdb_data()
 
 
-def migrate_data_function():
+def migrate_data_function(request):
     """Data migration cloud function"""
 
     create_bigquery_tables()
 
 
-def transform_data_function():
+def transform_data_function(request):
     """Data transformation cloud function"""
 
     create_curated_tables()
