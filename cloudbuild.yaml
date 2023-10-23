@@ -68,6 +68,6 @@ steps:
   - |
     gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
 
-serviceAccount: cloud-build@movies-data-platform.iam.gserviceaccount.com
+# serviceAccount: cloud-build@movies-data-platform.iam.gserviceaccount.com
 options :
   logging: CLOUD_LOGGING_ONLY
