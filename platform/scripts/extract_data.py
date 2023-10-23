@@ -20,8 +20,8 @@ from decouple import config
 
 
 # Define TMDb API information
-_TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
-_GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
+GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
 
 # Set a logger for this module
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def request_tmdb_api(request_url: str) -> dict:
     """Fetch data from TMDb API."""
 
     # HTTP GET request
-    response = requests.get(f"{request_url}?api_key=" + _TMDB_API_KEY)
+    response = requests.get(f"{request_url}?api_key=" + TMDB_API_KEY)
     
     if response.status_code == 200:
         return response.json()
@@ -46,7 +46,7 @@ def upload_json_data_to_gcp(name: str, data: dict):
 
     GCP_BUCKET_NAME = "movies-bucket-11"
     
-    client = storage.Client.from_service_account_json(_GCP_CREDENTIALS_JSON)
+    client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
     bucket = client.get_bucket(GCP_BUCKET_NAME)
     
     # File name in the bucket

@@ -24,7 +24,7 @@ from decouple import config
 logger = logging.getLogger(__name__)
 
 
-_GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
 
 AVG_VOTES_ORDERED_QUERY = f"""
@@ -77,7 +77,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     """Create new table from a source table using a SQL query."""
 
     # Initialize a BigQuery client
-    bigquery_client = bigquery.Client.from_service_account_json(_GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
+    bigquery_client = bigquery.Client.from_service_account_json(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
 
     # Check if the table already exists, and delete it if it does
     dataset_ref = bigquery_client.dataset(destination_dataset)
