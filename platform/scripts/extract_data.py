@@ -16,6 +16,7 @@ import json
 import requests
 import logging
 from google.cloud import storage
+from google.cloud import secretmanager
 from decouple import config
 
 
@@ -26,7 +27,11 @@ logger = logging.getLogger(__name__)
 def request_tmdb_api(request_url: str) -> dict:
     """Fetch data from TMDb API."""
 
-    TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
+    # TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
+    secret_name = "projects/movies-data-platform/secrets/TMDB_API_KEY/versions/latest"
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_name)
+    TMDB_API_KEY = response.payload.data.decode("UTF-8")
 
     # HTTP GET request
     response = requests.get(f"{request_url}?api_key=" + TMDB_API_KEY)
@@ -43,7 +48,12 @@ def upload_json_data_to_gcp(name: str, data: dict):
     """Upload data to GCP bucket."""
 
     GCP_BUCKET_NAME = "movies-bucket-11"
-    GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
+
+    secret_name = "projects/movies-data-platform/secrets/GCP_CREDENTIALS_JSON/versions/latest"
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_name)
+    GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
     
     client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
     bucket = client.get_bucket(GCP_BUCKET_NAME)

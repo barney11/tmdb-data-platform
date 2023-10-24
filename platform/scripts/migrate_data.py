@@ -18,6 +18,7 @@ import logging
 import os
 
 from google.cloud import bigquery
+from google.cloud import secretmanager
 from google.cloud.exceptions import NotFound
 from google.cloud.bigquery import LoadJobConfig
 from google.cloud import storage
@@ -72,8 +73,17 @@ def create_bigquery_tables():
     dataset_id = 'tmdb_dataset'
 
     # Initialize Storage and Bigquery clients
-    GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
-    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+    secret_name = "projects/movies-data-platform/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/latest"
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_name)
+    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+
+    secret_name = "projects/movies-data-platform/secrets/GCP_CREDENTIALS_JSON/versions/latest"
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_name)
+    GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
+    # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
     storage_client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
     bigquery_client = bigquery.Client.from_service_account_json(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
