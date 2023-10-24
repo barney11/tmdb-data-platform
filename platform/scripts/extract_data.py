@@ -28,7 +28,7 @@ def request_tmdb_api(request_url: str) -> dict:
     """Fetch data from TMDb API."""
 
     # TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
-    secret_name = "projects/485245531292/secrets/TMDB_API_KEY"
+    secret_name = "projects/485245531292/secrets/TMDB_API_KEY/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     TMDB_API_KEY = response.payload.data.decode("UTF-8")
@@ -49,7 +49,7 @@ def upload_json_data_to_gcp(name: str, data: dict):
 
     GCP_BUCKET_NAME = "movies-bucket-11"
 
-    secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON"
+    secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
