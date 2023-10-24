@@ -28,10 +28,6 @@ from decouple import config
 logger = logging.getLogger(__name__)
 
 
-GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
-GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
-
-
 # Function to create a table from a JSON file
 def create_table_from_json(json_file, bigquery_client, dataset_id, bucket_name):
     """Creates a BigQuery table from a json file."""
@@ -75,8 +71,10 @@ def create_bigquery_tables():
     bucket_name = 'movies-bucket-11'
     dataset_id = 'tmdb_dataset'
 
-    # Initialize the BigQuery client
-    # client = bigquery.Client(project=project_id)
+    # Initialize Storage and Bigquery clients
+    GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
+    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+
     storage_client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
     bigquery_client = bigquery.Client.from_service_account_json(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
 
