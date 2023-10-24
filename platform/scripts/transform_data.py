@@ -15,6 +15,8 @@
 
 import logging
 import os
+import json
+
 from google.cloud import bigquery
 from google.cloud import secretmanager
 from google.api_core.exceptions import NotFound
@@ -78,7 +80,8 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
-    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    payload = response.payload.data.decode("UTF-8")
+    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
     # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
     bigquery_client = bigquery.Client.from_service_account_json(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
 

@@ -16,6 +16,7 @@
 
 import logging
 import os
+import json
 
 from google.cloud import bigquery
 from google.cloud import secretmanager
@@ -76,12 +77,14 @@ def create_bigquery_tables():
     secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
-    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    payload = response.payload.data.decode("UTF-8")
+    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
 
     secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
-    GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    payload = response.payload.data.decode("UTF-8")
+    GCP_CREDENTIALS_JSON = json.loads(payload)
     # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
     # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 

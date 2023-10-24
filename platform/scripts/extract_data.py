@@ -15,6 +15,7 @@ import os
 import json
 import requests
 import logging
+
 from google.cloud import storage
 from google.cloud import secretmanager
 from decouple import config
@@ -52,7 +53,8 @@ def upload_json_data_to_gcp(name: str, data: dict):
     secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
-    GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
+    payload = response.payload.data.decode("UTF-8")
+    GCP_CREDENTIALS_JSON = json.loads(payload)
     # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
     
     client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
