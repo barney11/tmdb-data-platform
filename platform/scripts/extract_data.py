@@ -35,7 +35,7 @@ def request_tmdb_api(request_url: str) -> dict:
     TMDB_API_KEY = response.payload.data.decode("UTF-8")
 
     # HTTP GET request
-    response = requests.get(f"{request_url}?api_key=" + TMDB_API_KEY)
+    response = requests.get(f"{request_url}?api_key=" + str(TMDB_API_KEY))
     
     if response.status_code == 200:
         return response.json()
