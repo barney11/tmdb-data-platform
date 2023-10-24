@@ -29,7 +29,7 @@ def request_tmdb_api(request_url: str) -> dict:
     """Fetch data from TMDb API."""
 
     # TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
-    secret_name = "projects/485245531292/secrets/TMDB_API_KEY/versions/3"
+    secret_name = "projects/485245531292/secrets/TMDB_API_KEY/versions/4"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     TMDB_API_KEY = response.payload.data.decode("UTF-8")
