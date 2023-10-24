@@ -73,12 +73,12 @@ def create_bigquery_tables():
     dataset_id = 'tmdb_dataset'
 
     # Initialize Storage and Bigquery clients
-    secret_name = "projects/movies-data-platform/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/latest"
+    secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
 
-    secret_name = "projects/movies-data-platform/secrets/GCP_CREDENTIALS_JSON/versions/latest"
+    secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     GCP_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")

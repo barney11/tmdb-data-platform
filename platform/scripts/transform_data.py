@@ -75,7 +75,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     """Create new table from a source table using a SQL query."""
 
     # Initialize a BigQuery client
-    secret_name = "projects/movies-data-platform/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/latest"
+    secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = response.payload.data.decode("UTF-8")
