@@ -57,7 +57,7 @@ def upload_json_data_to_gcp(name: str, data: dict):
     GCP_CREDENTIALS_JSON = json.loads(payload)
     # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
     
-    client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
+    client = storage.Client.from_service_account_info(GCP_CREDENTIALS_JSON)
     bucket = client.get_bucket(GCP_BUCKET_NAME)
     
     # File name in the bucket

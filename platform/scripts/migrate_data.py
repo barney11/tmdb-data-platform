@@ -88,8 +88,8 @@ def create_bigquery_tables():
     # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
     # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
-    storage_client = storage.Client.from_service_account_json(GCP_CREDENTIALS_JSON)
-    bigquery_client = bigquery.Client.from_service_account_json(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
+    storage_client = storage.Client.from_service_account_info(GCP_CREDENTIALS_JSON)
+    bigquery_client = bigquery.Client.from_service_account_info(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
 
     # List JSON files in your Google Cloud Storage bucket
     blobs = storage_client.list_blobs(bucket_name)
