@@ -42,7 +42,7 @@ def request_tmdb_api(request_url: str) -> dict:
     
     else:
         logger.critical(f"Error fetching data from TMDb: {response.status_code}")
-        logger.critical(response)
+        logger.critical(response.json)
         return None
 
 
