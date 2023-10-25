@@ -93,7 +93,6 @@ def extract_tmdb_data():
             logger.info(f"Failed to extract TMDb {request_key} data.")
 
 
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     extract_tmdb_data()

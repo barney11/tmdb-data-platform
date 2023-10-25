@@ -26,14 +26,20 @@ def extract_data_function(request):
 
     extract_tmdb_data()
 
+    return "Data extraction : Done."
+
 
 def migrate_data_function(request):
     """Data migration cloud function"""
 
     create_bigquery_tables()
 
+    return "Data migration : Done."
+
 
 def transform_data_function(request):
     """Data transformation cloud function"""
 
     create_curated_tables()
+
+    return "Data transformation : Done."
