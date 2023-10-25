@@ -27,15 +27,16 @@ logger = logging.getLogger(__name__)
 
 def request_tmdb_api(request_url: str) -> dict:
     """Fetch data from TMDb API."""
-
-    # TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
-    secret_name = "projects/485245531292/secrets/TMDB_API_KEY/versions/4"
+    
+    # Get API key from the secret manager
+    secret_name = "projects/485245531292/secrets/TMDB_API_KEY/versions/3"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     TMDB_API_KEY = response.payload.data.decode("UTF-8")
 
     # HTTP GET request
-    response = requests.get(f"{request_url}?api_key=" + str(TMDB_API_KEY))
+    logger.info(f"{request_url}?api_key={TMDB_API_KEY}")
+    response = requests.get(f"{request_url}?api_key={TMDB_API_KEY}")
     
     if response.status_code == 200:
         return response.json()
@@ -84,9 +85,14 @@ def extract_tmdb_data():
         response = request_tmdb_api(request_url)
 
         # Upload extracted data to GCP bucket
-        upload_json_data_to_gcp(request_key, response)
-        logger.info(f"TMDb {request_key} data downloaded and successfully stored in the GCP bucket.")
+        if response is not None:
+            upload_json_data_to_gcp(request_key, response)
+            logger.info(f"TMDb {request_key} data downloaded and successfully stored in the GCP bucket.")
+
+        else:
+            logger.info(f"Failed to extract TMDb {request_key} data.")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     extract_tmdb_data()
