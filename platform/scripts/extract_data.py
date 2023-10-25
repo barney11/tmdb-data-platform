@@ -44,7 +44,7 @@ def request_tmdb_api(request_url: str) -> dict:
     else:
         logger.critical(f"Error fetching data from TMDb: {response.status_code}")
         logger.critical(response.reason)
-        return None
+        return response.json()
 
 
 def upload_json_data_to_gcp(name: str, data: dict):
@@ -91,6 +91,7 @@ def extract_tmdb_data():
 
         else:
             logger.info(f"Failed to extract TMDb {request_key} data.")
+
 
 
 if __name__ == "__main__":
