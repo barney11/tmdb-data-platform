@@ -35,9 +35,7 @@ def create_table_from_json(json_file, bigquery_client, dataset_id, bucket_name):
     """Creates a BigQuery table from a json file."""
 
     dataset_ref = bigquery_client.dataset(dataset_id)
-    table_id = json_file.split('.')[0]  # Use the file name as the table name
-
-    print(f"table_id = {table_id}")
+    table_id = f"{json_file.split('.')[0]}_table"  # Use the file name as the table name
 
     # Check if the table already exists, and delete it if it does
     table_ref = dataset_ref.table(table_id)
@@ -73,20 +71,19 @@ def create_bigquery_tables():
     bucket_name = 'movies-bucket-11'
     dataset_id = 'tmdb_dataset'
 
-    # Initialize Storage and Bigquery clients
+    # Initialize Storage client
     secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
 
+    # Initialize BigQuery client
     secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
     GCP_CREDENTIALS_JSON = json.loads(payload)
-    # GCP_CREDENTIALS_JSON = os.environ.get("GCP_CREDENTIALS_JSON")
-    # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
 
     storage_client = storage.Client.from_service_account_info(GCP_CREDENTIALS_JSON)
     bigquery_client = bigquery.Client.from_service_account_info(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
@@ -106,6 +103,7 @@ def create_bigquery_tables():
             dataset_id=dataset_id,
             bucket_name=bucket_name
         )
+
 
 if __name__ == "__main__":
     create_bigquery_tables()
