@@ -27,6 +27,15 @@ from decouple import config
 logger = logging.getLogger(__name__)
 
 
+AVG_VOTES = f"""
+    SELECT 
+        result.title AS title,
+        result.vote_average AS vote_average
+    FROM
+        `movies-data-platform.tmdb_dataset.now_playing_table`, 
+        UNNEST(results) AS result
+"""
+
 AVG_VOTES_ORDERED_QUERY = f"""
     SELECT
         result.title AS movie_title,
@@ -151,6 +160,7 @@ def create_curated_tables():
 
     # Define queries corresponding to each new curated table
     sql_queries = {
+        "avg_votes" : AVG_VOTES,
         "avg_votes_ordered" : AVG_VOTES_ORDERED_QUERY,
         "avg_votes_by_genres" : AVG_VOTES_BY_GENRES,
         "movie_count_by_release_month" : MOVIE_COUNT_BY_RELEASE_MONTH_QUERY,
