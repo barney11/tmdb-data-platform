@@ -35,7 +35,7 @@ AVG_VOTES_ORDERED_QUERY = f"""
     FROM
         `movies-data-platform.tmdb_dataset.now_playing_table`,
         UNNEST(results) AS result
-    ORDER BY vote_average DESC
+    ORDER BY vote_average DESC LIMIT 5
 """
 
 AVG_VOTES_BY_GENRES = f"""
@@ -73,6 +73,42 @@ MOVIE_COUNT_BY_RELEASE_MONTH_QUERY = f"""
         release_month
 """
 
+MOVIE_COUNT_BY_GENRE = f"""
+    SELECT 
+  
+        name, 
+        movie_count, 
+
+    FROM
+
+        (SELECT
+            genre_id AS movie_count_genre_id,
+            COUNT(results) AS movie_count
+        FROM
+            `movies-data-platform.tmdb_dataset.now_playing_table`,
+            UNNEST(results) AS result,
+            UNNEST(result.genre_ids) AS genre_id
+        GROUP BY
+            genre_id
+        ORDER BY
+            movie_count DESC
+        ) AS movie_count_table
+
+    LEFT JOIN
+
+        (SELECT
+            genre.name AS name,
+            genre.id AS id
+        FROM
+            `movies-data-platform.tmdb_dataset.genres_table`,
+            UNNEST(genres) AS genre
+        ) AS genres_table
+
+    ON
+
+        movie_count_table.movie_count_genre_id = genres_table.id
+"""
+
 def create_new_table_from_query(destination_dataset, destination_table, sql_query):
     """Create new table from a source table using a SQL query."""
 
@@ -82,7 +118,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
-    # GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = os.environ.get("GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON")
+
     bigquery_client = bigquery.Client.from_service_account_info(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
 
     # Check if the table already exists, and delete it if it does
@@ -117,7 +153,8 @@ def create_curated_tables():
     sql_queries = {
         "avg_votes_ordered" : AVG_VOTES_ORDERED_QUERY,
         "avg_votes_by_genres" : AVG_VOTES_BY_GENRES,
-        "movie_count_by_release_month" : MOVIE_COUNT_BY_RELEASE_MONTH_QUERY
+        "movie_count_by_release_month" : MOVIE_COUNT_BY_RELEASE_MONTH_QUERY,
+        "movie_count_by_genre" : MOVIE_COUNT_BY_GENRE
     }
 
     # Call the function to create the new tables from SQL queries
