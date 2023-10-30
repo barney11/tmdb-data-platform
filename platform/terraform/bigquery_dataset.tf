@@ -1,8 +1,3 @@
-provider "google" {
-  project     = var.project_id
-  region      = var.region
-}
-
 resource "google_bigquery_dataset" "tmdb_dataset" {
   dataset_id                  = "tmdb_dataset"
   friendly_name               = "Movies dataset"

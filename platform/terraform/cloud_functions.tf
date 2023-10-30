@@ -1,8 +1,3 @@
-provider "google" {
-  project     = var.project_id
-  region      = var.region
-}
-
 resource "google_cloudfunctions_function" "extract_data_function" {
   name        = "extract-data-function"
   runtime     = "python38"

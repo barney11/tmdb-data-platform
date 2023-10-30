@@ -1,8 +1,3 @@
-provider "google" {
-  project     = var.project_id
-  region      = var.region 
-}
-
 resource "google_cloud_scheduler_job" "tmdb_workflow_scheduler" {
   name        = "tmdb-workflow-scheduler"
   description = "Workflow scheduler for movies data processing."

@@ -1,8 +1,3 @@
-provider "google" {
-  project     = var.project_id
-  region      = var.region
-}
-
 resource "google_secret_manager_secret" "tmdb_api_key_secret" {
   secret_id = "TMDB_API_KEY"  # Replace with your desired secret name
 
