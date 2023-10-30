@@ -51,12 +51,12 @@
 
 steps:
   # Authenticate with Google Cloud using the service account key stored as a secret
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
 
   # Download and install Terraform
   - name: 'hashicorp/terraform:latest'
