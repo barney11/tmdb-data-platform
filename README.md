@@ -33,6 +33,14 @@ export TMDB_API_KEY=<your-api-key>
 
 &rarr; Make sure you have a valid google account. The go to the Google Cloud Platform console and create a project called `movies-data-platform`
 
+### Install Terraform
+
+```
+curl -LO https://releases.hashicorp.com/terraform/1.6.2/terraform_1.6.2_linux_amd64.zip
+unzip terraform_1.6.2_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
+```
+
 ### Install dependancies
 
 
