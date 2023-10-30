@@ -56,8 +56,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "$$GCP_CREDENTIALS" > /tmp/key.json
-        gcloud auth activate-service-account --key-file=/tmp/key.json
+        gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
 
   # Download and install Terraform
   - name: 'hashicorp/terraform:latest'
