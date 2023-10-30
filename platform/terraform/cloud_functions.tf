@@ -9,6 +9,7 @@ resource "google_cloudfunctions_function" "extract_data_function" {
     url = https://github.com/barney11/tmdb-data-platform/tree/main/platform
   
   }
+  
 }
 
 resource "google_cloudfunctions_function" "migrate_data_function" {
@@ -22,6 +23,7 @@ resource "google_cloudfunctions_function" "migrate_data_function" {
     url = https://github.com/barney11/tmdb-data-platform/tree/main/platform
   
   }
+
 }
 
 resource "google_cloudfunctions_function" "transform_data_function" {
@@ -35,6 +37,7 @@ resource "google_cloudfunctions_function" "transform_data_function" {
     url = https://github.com/barney11/tmdb-data-platform/tree/main/platform
   
   }
+
 }
 
 resource "google_cloud_workflows_workflow" "tmdb_workflow" {
