@@ -1,50 +1,100 @@
+# steps:
+
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args:
+#   - '-c'
+#   - |
+#     gcloud functions deploy extract_data_function \
+#       --runtime python38 \
+#       --trigger-http \
+#       --entry-point extract_data_function \
+#       --source platform/ \
+#       --allow-unauthenticated
+#   id: 'deploy-data-extraction-function'
+
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args:
+#   - '-c'
+#   - |
+#     gcloud functions deploy migrate_data_function \
+#       --runtime python38 \
+#       --trigger-http \
+#       --entry-point migrate_data_function \
+#       --source platform/ \
+#       --allow-unauthenticated
+#   id: 'deploy-data-migration-function'
+
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args:
+#   - '-c'
+#   - |
+#     gcloud functions deploy transform_data_function \
+#       --runtime python38 \
+#       --trigger-http \
+#       --entry-point transform_data_function \
+#       --source platform/ \
+#       --allow-unauthenticated
+#   id: 'deploy-data-transformation-function'
+
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args:
+#   - '-c'
+#   - |
+#     gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
+
+# options :
+#   logging: CLOUD_LOGGING_ONLY
+
 steps:
+  # Authenticate with Google Cloud using the service account key stored as a secret
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "$$GCP_CREDENTIALS" > /tmp/key.json
+        gcloud auth activate-service-account --key-file=/tmp/key.json
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gcloud functions deploy extract_data_function \
-      --runtime python38 \
-      --trigger-http \
-      --entry-point extract_data_function \
-      --source platform/ \
-      --allow-unauthenticated
-  id: 'deploy-data-extraction-function'
+  # Download and install Terraform
+  - name: 'hashicorp/terraform:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        terraform --version
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gcloud functions deploy migrate_data_function \
-      --runtime python38 \
-      --trigger-http \
-      --entry-point migrate_data_function \
-      --source platform/ \
-      --allow-unauthenticated
-  id: 'deploy-data-migration-function'
+  # Move to the directory where Terraform files are located
+  - name: 'hashicorp/terraform:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd platform/terraform
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gcloud functions deploy transform_data_function \
-      --runtime python38 \
-      --trigger-http \
-      --entry-point transform_data_function \
-      --source platform/ \
-      --allow-unauthenticated
-  id: 'deploy-data-transformation-function'
+  # Initialize Terraform and download necessary providers
+  - name: 'hashicorp/terraform:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        terraform init
 
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gcloud workflows deploy tmdb-workflow --source platform/workflows/tmdb_data_workflow.yaml
+  # Plan the changes to be applied
+  - name: 'hashicorp/terraform:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        terraform plan -var-file=platform/terraform/terraform.tfvars -out=tfplan
 
-options :
-  logging: CLOUD_LOGGING_ONLY
+  # Apply the changes (deploy infrastructure)
+  - name: 'hashicorp/terraform:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        terraform apply tfplan -var TMDB_API_KEY
