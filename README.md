@@ -11,7 +11,7 @@ This platform automatically extracts and processes movie-related data from The M
 
 These steps are deployed to GCP as __Cloud functions__. A workflow runs each cloud function sequentially, using the GCP __Workflows__ tool. A __Cloud Scheduler__ is used to trigger the workflow every day, at 9am.
 
-Curated data rendering can be done easily with __Looker Studio__.
+Curated data rendering can be done with __Looker Studio__. The following looker studio report is updated when new curated data is available: https://lookerstudio.google.com/reporting/734e22f6-09ae-4210-a47d-40d88755ebb2
 
 # Getting started
 
@@ -48,15 +48,15 @@ pip install -e .
 __Optional__ : If you plan to make a fork of this project and keep maximum code quality level, install the dev dependancies and activate pre-commit :
 
 ```
-pip install .[dev]
+pip install -e .[dev]
 pre-commit install
 ```
 
 ### Generate a TMDb API key
 
-&rarr; Create an account and generate an API key on _The Movie Database_ : https://www.themoviedb.org/
+Create an account and generate an API key on _The Movie Database_ : https://www.themoviedb.org/
 
-&rarr; Export your API key :
+Export your API key :
 
 ```
 export TF_VAR_TMDB_API_KEY=<your-api-key>
@@ -64,7 +64,7 @@ export TF_VAR_TMDB_API_KEY=<your-api-key>
 
 ### Build a GCP project
 
-&rarr; Make sure you have a valid google account. The go to the Google Cloud Platform console and create a new project. Export the project id and the project number:
+Make sure you have a valid google account. The go to the Google Cloud Platform console and create a new project. Export the project id and the project number:
 
 ```
 export TF_VAR_PROJECT_ID=<your-project-id>
@@ -150,7 +150,7 @@ terraform apply "tfplan"
 
 ### Build dashboard with Looker Studio
 
-You can easily build a Looker report with charts from the curated bigquery tables from your bigquery dataset.
+You can easily build a Looker Studio report with charts from the curated bigquery tables.
 
 ---
 _This project was developed by listening to the album "Looping", a collaboration between Rone and the Orchestre National de Lyon._
