@@ -25,6 +25,8 @@ from google.cloud.bigquery import LoadJobConfig
 from google.cloud import storage
 from decouple import config
 
+from . import constants
+
 
 # Create a logger for this module
 logger = logging.getLogger(__name__)
@@ -67,19 +69,21 @@ def create_bigquery_tables():
     """Create biquery tables from json files in a GCP bucket."""
 
     # Set your project and bucket information
-    project_id = 'movies-data-platform'
-    bucket_name = 'movies-bucket-11'
-    dataset_id = 'tmdb_dataset'
+    project_id = constants.GCP_PROJECT_ID
+    bucket_name = constants.GCP_DATA_STORAGE_BUCKET_NAME
+    dataset_id = constants.GCP_DATASET_NAME
+    project_number = constants.GCP_PROJECT_NUMBER
 
     # Initialize Storage client
-    secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
+    # secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
 
     # Initialize BigQuery client
-    secret_name = "projects/485245531292/secrets/GCP_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")

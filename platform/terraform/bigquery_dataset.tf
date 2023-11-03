@@ -1,5 +1,5 @@
 resource "google_bigquery_dataset" "tmdb_dataset" {
-  dataset_id                  = "tmdb_dataset"
+  dataset_id                  = var.dataset_name
   friendly_name               = "Movies dataset"
   description                 = "Bigquery dataset for movies data processing."
   location                    = "US"

@@ -22,6 +22,8 @@ from google.cloud import secretmanager
 from google.api_core.exceptions import NotFound
 from decouple import config
 
+from . import constants
+
 
 # Create a logger for this module
 logger = logging.getLogger(__name__)
@@ -122,7 +124,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     """Create new table from a source table using a SQL query."""
 
     # Initialize a BigQuery client
-    secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/GCP_CREDENTIALS_JSON/versions/1"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
@@ -140,7 +142,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
         pass
 
     # Create a BigQuery job to run the SQL query and save the results to the new table
-    job_config = bigquery.QueryJobConfig(destination=f'{"movies-data-platform"}.{destination_dataset}.{destination_table}')
+    job_config = bigquery.QueryJobConfig(destination=f'{constants.GCP_PROJECT_ID}.{destination_dataset}.{destination_table}')
     query_job = bigquery_client.query(sql_query, job_config=job_config)
 
     # Wait for the query job to complete
@@ -153,10 +155,10 @@ def create_curated_tables():
     """Create the movies curated bigquery tables."""
 
     # Define the source dataset
-    source_dataset_name = 'tmdb_dataset'
+    source_dataset_name = constants.GCP_DATASET_NAME
     
     # Define the destination dataset
-    destination_dataset_name = 'tmdb_dataset'
+    destination_dataset_name = constants.GCP_DATASET_NAME
 
     # Define queries corresponding to each new curated table
     sql_queries = {
