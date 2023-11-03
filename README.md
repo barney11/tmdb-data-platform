@@ -156,4 +156,4 @@ terraform apply "tfplan"
 You can easily build a Looker Studio report with charts from the curated bigquery tables.
 
 ---
-_This project was developed by listening to the album "Looping", a collaboration between Rone and the Orchestre National de Lyon._
+_This project was developed while listening to the album "Looping", a collaboration between Rone and the Orchestre National de Lyon._
