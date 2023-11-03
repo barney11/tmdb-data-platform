@@ -76,14 +76,14 @@ def create_bigquery_tables():
 
     # Initialize Storage client
     # secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
-    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
     GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
 
     # Initialize BigQuery client
-    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")

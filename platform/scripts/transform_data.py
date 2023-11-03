@@ -34,7 +34,7 @@ AVG_VOTES = f"""
         result.title AS title,
         result.vote_average AS vote_average
     FROM
-        `movies-data-platform.tmdb_dataset.now_playing_table`, 
+        `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`, 
         UNNEST(results) AS result
 """
 
@@ -44,7 +44,7 @@ AVG_VOTES_ORDERED_QUERY = f"""
         result.release_date AS release_date,
         CAST(result.vote_average AS FLOAT64) AS vote_average
     FROM
-        `movies-data-platform.tmdb_dataset.now_playing_table`,
+        `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`,
         UNNEST(results) AS result
     ORDER BY vote_average DESC LIMIT 5
 """
@@ -55,11 +55,11 @@ AVG_VOTES_BY_GENRES = f"""
             g.name AS genre_name,
             ROUND(AVG(CAST(result.vote_average AS FLOAT64)), 2) AS average_vote
         FROM
-            `movies-data-platform.tmdb_dataset.now_playing_table`,
+            `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`,
             UNNEST(results) AS result,
             UNNEST(result.genre_ids) AS genre_id
         CROSS JOIN
-            `movies-data-platform.tmdb_dataset.genres_table`,
+            `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.genres_table`,
             UNNEST(genres) AS g
         WHERE
             g.id = genre_id
@@ -78,7 +78,7 @@ MOVIE_COUNT_BY_RELEASE_MONTH_QUERY = f"""
         FORMAT_DATE('%b %Y', DATE(result.release_date)) AS release_month,
         COUNT(*) AS movie_count
     FROM
-        `movies-data-platform.tmdb_dataset.now_playing_table`,
+        `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`,
         UNNEST(results) AS result
     GROUP BY
         release_month
@@ -96,7 +96,7 @@ MOVIE_COUNT_BY_GENRE = f"""
             genre_id AS movie_count_genre_id,
             COUNT(results) AS movie_count
         FROM
-            `movies-data-platform.tmdb_dataset.now_playing_table`,
+            `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`,
             UNNEST(results) AS result,
             UNNEST(result.genre_ids) AS genre_id
         GROUP BY
@@ -111,7 +111,7 @@ MOVIE_COUNT_BY_GENRE = f"""
             genre.name AS name,
             genre.id AS id
         FROM
-            `movies-data-platform.tmdb_dataset.genres_table`,
+            `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.genres_table`,
             UNNEST(genres) AS genre
         ) AS genres_table
 
@@ -124,7 +124,7 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     """Create new table from a source table using a SQL query."""
 
     # Initialize a BigQuery client
-    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/GCP_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")

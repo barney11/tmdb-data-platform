@@ -1,4 +1,4 @@
-resource "google_bigquery_dataset" "tmdb_dataset" {
+resource "google_bigquery_dataset" "dataset" {
   dataset_id                  = var.dataset_name
   friendly_name               = "Movies dataset"
   description                 = "Bigquery dataset for movies data processing."
@@ -7,7 +7,4 @@ resource "google_bigquery_dataset" "tmdb_dataset" {
   labels = {
     environment = "default"
   }
-  
-  default_table_expiration_ms = 3600000  # 1 hour in milliseconds
-  default_partition_expiration_ms = 2592000000  # 30 days in milliseconds
 }

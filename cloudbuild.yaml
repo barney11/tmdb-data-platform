@@ -49,51 +49,56 @@
 # options :
 #   logging: CLOUD_LOGGING_ONLY
 
-steps:
-  # Authenticate with Google Cloud using the service account key stored as a secret
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
 
-  # Download and install Terraform
-  - name: 'hashicorp/terraform:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        terraform --version
 
-  # Move to the directory where Terraform files are located
-  - name: 'hashicorp/terraform:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cd platform/terraform
 
-  # Initialize Terraform and download necessary providers
-  - name: 'hashicorp/terraform:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        terraform init
 
-  # Plan the changes to be applied
-  - name: 'hashicorp/terraform:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        terraform plan -var-file=platform/terraform/terraform.tfvars -out=tfplan
 
-  # Apply the changes (deploy infrastructure)
-  - name: 'hashicorp/terraform:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        terraform apply tfplan -var TMDB_API_KEY
+# steps:
+#   # Authenticate with Google Cloud using the service account key stored as a secret
+#   # - name: 'gcr.io/cloud-builders/gcloud'
+#   #   entrypoint: 'bash'
+#   #   args:
+#   #     - '-c'
+#   #     - |
+#   #       gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
+
+#   # Download and install Terraform
+#   - name: 'hashicorp/terraform:latest'
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         terraform --version
+
+#   # Move to the directory where Terraform files are located
+#   - name: 'hashicorp/terraform:latest'
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         cd $(pwd)/platform/terraform
+
+#   # Initialize Terraform and download necessary providers
+#   - name: 'hashicorp/terraform:latest'
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         terraform init
+
+#   # Plan the changes to be applied
+#   - name: 'hashicorp/terraform:latest'
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         terraform plan -var-file=terraform.tfvars -out=tfplan -var tmdb_api_key=$TF_VAR_TMDB_API_KEY -var gcp_credentials_json=$TF_VAR_GCP_CREDENTIALS -var project_id=$TF_VAR_PROJECT_ID -var dataset_name=$TF_VAR_DATASET_NAME -var 
+
+#   # Apply the changes (deploy infrastructure)
+#   - name: 'hashicorp/terraform:latest'
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         terraform apply tfplan

@@ -3,15 +3,21 @@ main:
     - data-extraction:
         call: http.get
         args:
-          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/extract_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/extract-data-cloudfunction'
+          auth:
+            type: OIDC
 
     - data-migration:
         call: http.get
         args:
-          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/migrate_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/migrate-data-cloudfunction'
+          auth:
+            type: OIDC
 
     - data-transformation:
         call: http.get
         args:
-          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/transform_data_function'
+          url: 'https://us-central1-movies-data-platform.cloudfunctions.net/transform-data-cloudfunction'
+          auth:
+            type: OIDC
 

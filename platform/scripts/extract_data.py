@@ -33,7 +33,7 @@ def request_tmdb_api(request_url: str) -> dict:
     # GCP_PROJECT_NUMBER = os.environ["TF_VAR_PROJECT_NUMBER"]
     
     # Get API key from the secret manager
-    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/TMDB_API_KEY/versions/1"
+    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/TMDB_API_KEY/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     TMDB_API_KEY = response.payload.data.decode("UTF-8")
@@ -56,7 +56,7 @@ def upload_json_data_to_gcp(name: str, data: dict):
     # GCP_BUCKET_NAME = "movies-bucket-11"
     # GCP_BUCKET_NAME = os.environ["TF_VAR_DATA_STORAGE_BUCKET_NAME"]
 
-    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/GCP_CREDENTIALS_JSON/versions/1"
+    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
