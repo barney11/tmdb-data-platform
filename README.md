@@ -151,7 +151,7 @@ Deploy:
 terraform apply "tfplan"
 ```
 
-### Build dashboard with Looker Studio
+### Build your own report with Looker Studio
 
 You can easily build a Looker Studio report with charts from the curated bigquery tables.
 
