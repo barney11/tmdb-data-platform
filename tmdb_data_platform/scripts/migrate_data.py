@@ -14,19 +14,16 @@
 
 """Bigquery tables creation script from GCP bucket json files."""
 
-import logging
-import os
-import json
 
-from google.cloud import bigquery
-from google.cloud import secretmanager
-from google.cloud.exceptions import NotFound
+# pylint: disable=logging-fstring-interpolation
+import json
+import logging
+
+from google.cloud import bigquery, secretmanager, storage
 from google.cloud.bigquery import LoadJobConfig
-from google.cloud import storage
-from decouple import config
+from google.cloud.exceptions import NotFound
 
 from . import constants
-
 
 # Create a logger for this module
 logger = logging.getLogger(__name__)
@@ -54,7 +51,7 @@ def create_table_from_json(json_file, bigquery_client, dataset_id, bucket_name):
     )
 
     # Load data from Google Cloud Storage into BigQuery
-    uri = f'gs://{bucket_name}/{json_file}'
+    uri = f"gs://{bucket_name}/{json_file}"
     load_job = bigquery_client.load_table_from_uri(
         uri,
         table_ref,
@@ -63,38 +60,37 @@ def create_table_from_json(json_file, bigquery_client, dataset_id, bucket_name):
 
     load_job.result()  # Wait for the job to complete
 
-    logger.info(f'Table {table_id} created successfully from {json_file}')
+    logger.info(f"Table {table_id} created successfully from {json_file}")
+
 
 def create_bigquery_tables():
     """Create biquery tables from json files in a GCP bucket."""
 
     # Set your project and bucket information
-    project_id = constants.GCP_PROJECT_ID
     bucket_name = constants.GCP_DATA_STORAGE_BUCKET_NAME
     dataset_id = constants.GCP_DATASET_NAME
     project_number = constants.GCP_PROJECT_NUMBER
 
     # Initialize Storage client
-    # secret_name = "projects/485245531292/secrets/GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON/versions/1"
     secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
-    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
+    gcp_bigquery_admin_credentials_json = json.loads(payload)
 
     # Initialize BigQuery client
     secret_name = f"projects/{project_number}/secrets/GCP_CREDENTIALS_JSON/versions/latest"
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
-    GCP_CREDENTIALS_JSON = json.loads(payload)
+    gcp_credentials_json = json.loads(payload)
 
-    storage_client = storage.Client.from_service_account_info(GCP_CREDENTIALS_JSON)
-    bigquery_client = bigquery.Client.from_service_account_info(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
+    storage_client = storage.Client.from_service_account_info(gcp_credentials_json)
+    bigquery_client = bigquery.Client.from_service_account_info(gcp_bigquery_admin_credentials_json)
 
     # List JSON files in your Google Cloud Storage bucket
     blobs = storage_client.list_blobs(bucket_name)
-    json_files = [blob.name for blob in blobs if blob.name.endswith('.json')]
+    json_files = [blob.name for blob in blobs if blob.name.endswith(".json")]
 
     logger.info(f"json files = {json_files}")
     print(f"json files = {json_files}")
@@ -102,10 +98,7 @@ def create_bigquery_tables():
     # Create BigQuery tables for each JSON file
     for json_file in json_files:
         create_table_from_json(
-            json_file=json_file,
-            bigquery_client=bigquery_client, 
-            dataset_id=dataset_id,
-            bucket_name=bucket_name
+            json_file=json_file, bigquery_client=bigquery_client, dataset_id=dataset_id, bucket_name=bucket_name
         )
 
 
