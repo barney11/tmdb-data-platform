@@ -13,28 +13,25 @@
 
 """Transform bigquery tables into curated data tables."""
 
-import logging
-import os
+# pylint: disable=logging-fstring-interpolation
 import json
+import logging
 
-from google.cloud import bigquery
-from google.cloud import secretmanager
 from google.api_core.exceptions import NotFound
-from decouple import config
+from google.cloud import bigquery, secretmanager
 
 from . import constants
-
 
 # Create a logger for this module
 logger = logging.getLogger(__name__)
 
 
 AVG_VOTES = f"""
-    SELECT 
+    SELECT
         result.title AS title,
         result.vote_average AS vote_average
     FROM
-        `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`, 
+        `{constants.GCP_PROJECT_ID}.{constants.GCP_DATASET_NAME}.now_playing_table`,
         UNNEST(results) AS result
 """
 
@@ -85,10 +82,10 @@ MOVIE_COUNT_BY_RELEASE_MONTH_QUERY = f"""
 """
 
 MOVIE_COUNT_BY_GENRE = f"""
-    SELECT 
-  
-        name, 
-        movie_count, 
+    SELECT
+
+        name,
+        movie_count,
 
     FROM
 
@@ -120,6 +117,7 @@ MOVIE_COUNT_BY_GENRE = f"""
         movie_count_table.movie_count_genre_id = genres_table.id
 """
 
+
 def create_new_table_from_query(destination_dataset, destination_table, sql_query):
     """Create new table from a source table using a SQL query."""
 
@@ -128,9 +126,9 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=secret_name)
     payload = response.payload.data.decode("UTF-8")
-    GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON = json.loads(payload)
+    gcp_bigquery_admin_credentials_json = json.loads(payload)
 
-    bigquery_client = bigquery.Client.from_service_account_info(GCP_BIGQUERY_ADMIN_CREDENTIALS_JSON)
+    bigquery_client = bigquery.Client.from_service_account_info(gcp_bigquery_admin_credentials_json)
 
     # Check if the table already exists, and delete it if it does
     dataset_ref = bigquery_client.dataset(destination_dataset)
@@ -142,38 +140,36 @@ def create_new_table_from_query(destination_dataset, destination_table, sql_quer
         pass
 
     # Create a BigQuery job to run the SQL query and save the results to the new table
-    job_config = bigquery.QueryJobConfig(destination=f'{constants.GCP_PROJECT_ID}.{destination_dataset}.{destination_table}')
+    job_config = bigquery.QueryJobConfig(
+        destination=f"{constants.GCP_PROJECT_ID}.{destination_dataset}.{destination_table}"
+    )
     query_job = bigquery_client.query(sql_query, job_config=job_config)
 
     # Wait for the query job to complete
     query_job.result()
 
-    logger.info(f'Table {destination_dataset}.{destination_table} created successfully.')
+    logger.info(f"Table {destination_dataset}.{destination_table} created successfully.")
 
 
 def create_curated_tables():
     """Create the movies curated bigquery tables."""
 
-    # Define the source dataset
-    source_dataset_name = constants.GCP_DATASET_NAME
-    
     # Define the destination dataset
     destination_dataset_name = constants.GCP_DATASET_NAME
 
     # Define queries corresponding to each new curated table
     sql_queries = {
-        "avg_votes" : AVG_VOTES,
-        "avg_votes_ordered" : AVG_VOTES_ORDERED_QUERY,
-        "avg_votes_by_genres" : AVG_VOTES_BY_GENRES,
-        "movie_count_by_release_month" : MOVIE_COUNT_BY_RELEASE_MONTH_QUERY,
-        "movie_count_by_genre" : MOVIE_COUNT_BY_GENRE
+        "avg_votes": AVG_VOTES,
+        "avg_votes_ordered": AVG_VOTES_ORDERED_QUERY,
+        "avg_votes_by_genres": AVG_VOTES_BY_GENRES,
+        "movie_count_by_release_month": MOVIE_COUNT_BY_RELEASE_MONTH_QUERY,
+        "movie_count_by_genre": MOVIE_COUNT_BY_GENRE,
     }
 
     # Call the function to create the new tables from SQL queries
     for table_name, table_query in sql_queries.items():
-        create_new_table_from_query(
-            destination_dataset_name, table_name, table_query
-        )
+        create_new_table_from_query(destination_dataset_name, table_name, table_query)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     create_curated_tables()
