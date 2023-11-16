@@ -15,7 +15,6 @@
 
 import os
 
-
 # Project ID and number
 GCP_PROJECT_ID = os.environ.get("TF_VAR_PROJECT_ID")
 GCP_PROJECT_NUMBER = os.environ.get("TF_VAR_PROJECT_NUMBER")
@@ -25,4 +24,3 @@ GCP_DATASET_NAME = os.environ.get("TF_VAR_DATASET_NAME")
 
 # Bucket name for data storage
 GCP_DATA_STORAGE_BUCKET_NAME = os.environ.get("TF_VAR_DATA_STORAGE_BUCKET_NAME")
-
