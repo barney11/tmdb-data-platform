@@ -48,6 +48,32 @@ def request_tmdb_api(request_url: str) -> dict:
     return response.json()
 
 
+def request_all_pages_tmdb_api(request_url: str) -> dict:
+    """Fetch data from TMDb API after merging all pages."""
+
+    # Get API key from the secret manager
+    secret_name = f"projects/{constants.GCP_PROJECT_NUMBER}/secrets/TMDB_API_KEY/versions/latest"
+    client = secretmanager.SecretManagerServiceClient()
+    response = client.access_secret_version(name=secret_name)
+    tmdb_api_key = response.payload.data.decode("UTF-8")
+
+    # Extract first page of data
+    json_response = request_tmdb_api(request_url)
+
+    # Extract total numer of pages
+    total_pages = json_response["total_pages"]
+
+    if total_pages > 1:
+        # Expend results list in the json file with next pages
+        for page_index in range(2, total_pages + 1):
+            next_response = requests.get(f"{request_url}?api_key={tmdb_api_key}&page={page_index}", timeout=30)
+            next_json_response = next_response.json()
+
+            json_response["results"] += next_json_response["results"]
+
+    return json_response
+
+
 def upload_json_data_to_gcp(name: str, data: dict):
     """Upload data to GCP bucket."""
 
@@ -80,7 +106,10 @@ def extract_tmdb_data():
 
     for request_key, request_url in movie_requests.items():
         # TMDb API JSON response
-        response = request_tmdb_api(request_url)
+        if request_key == "now_playing":
+            response = request_all_pages_tmdb_api(request_url)
+        else:
+            response = request_tmdb_api(request_url)
 
         # Upload extracted data to GCP bucket
         if response is not None:
