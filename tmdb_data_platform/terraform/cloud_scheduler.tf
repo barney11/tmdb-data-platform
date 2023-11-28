@@ -4,8 +4,8 @@ resource "google_cloud_scheduler_job" "tmdb_data_workflow_scheduler" {
   schedule    = "0 9 * * *"  # Trigger at 9:00 AM every day (UTC time)
 
   http_target {
-    http_method = "GET"
-    uri         = "https://workflowexecutions.googleapis.com/v1/projects/movies-data-platform/locations/us-central1/workflows/tmdb-workflow/executions"
+    http_method = "POST"
+    uri         = "https://workflowexecutions.googleapis.com/v1/projects/movies-data-platform/locations/us-central1/workflows/tmdb-data-workflow/executions"
   }
 
   time_zone = "Europe/Paris"
