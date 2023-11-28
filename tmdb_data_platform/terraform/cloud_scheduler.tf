@@ -6,6 +6,9 @@ resource "google_cloud_scheduler_job" "tmdb_data_workflow_scheduler" {
   http_target {
     http_method = "POST"
     uri         = "https://workflowexecutions.googleapis.com/v1/projects/movies-data-platform/locations/us-central1/workflows/tmdb-data-workflow/executions"
+    oauth_token {
+      service_account_email = "service-account@movies-data-platform.iam.gserviceaccount.com"
+    }
   }
 
   time_zone = "Europe/Paris"
@@ -13,4 +16,5 @@ resource "google_cloud_scheduler_job" "tmdb_data_workflow_scheduler" {
   retry_config {
     retry_count = 3
   }
+
 }
