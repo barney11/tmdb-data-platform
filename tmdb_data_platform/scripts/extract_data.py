@@ -74,6 +74,18 @@ def request_all_pages_tmdb_api(request_url: str) -> dict:
     return json_response
 
 
+def keep_most_popular_movies(json_response: dict, nb_movies: int) -> dict:
+    """Keep only the most popular movies."""
+
+    movies_list = json_response["results"]
+
+    # If "popularity" key is not found, default  alue is 0.0
+    sorted_movies = sorted(movies_list, key=lambda x: x.get("popularity", 0.0), reverse=True)
+    json_response["results"] = sorted_movies[:nb_movies]
+
+    return json_response
+
+
 def upload_json_data_to_gcp(name: str, data: dict):
     """Upload data to GCP bucket."""
 
@@ -107,7 +119,8 @@ def extract_tmdb_data():
     for request_key, request_url in movie_requests.items():
         # TMDb API JSON response
         if request_key == "now_playing":
-            response = request_all_pages_tmdb_api(request_url)
+            full_response = request_all_pages_tmdb_api(request_url)
+            response = keep_most_popular_movies(full_response, 250)
         else:
             response = request_tmdb_api(request_url)
 
