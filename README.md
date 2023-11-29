@@ -12,7 +12,7 @@ This platform automatically extracts and processes movie-related data from The M
 
 These steps are deployed to GCP as __Cloud functions__. A workflow runs each cloud function sequentially, using the GCP __Workflows__ tool. A __Cloud Scheduler__ is used to trigger the workflow every day, at 9am.
 
-Curated data rendering is done with __Looker Studio__. The following looker studio report is updated when new curated data is available and __shows charts related to the 250 most popular movies that are currently in theatres.__ : 
+Curated data rendering is done with __Looker Studio__. The following looker studio report is updated when new curated data is available and __shows charts related to the 250 most popular movies that are currently in theatres__ : 
 
 [Looker Studio report link](https://lookerstudio.google.com/reporting/734e22f6-09ae-4210-a47d-40d88755ebb2)
 
