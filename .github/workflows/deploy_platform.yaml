@@ -33,12 +33,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
 
-      # - name: 'Set up Cloud SDK'
-      #   uses: 'google-github-actions/setup-gcloud@v2'
-
-      # - name: 'Use gcloud CLI'
-      #   run: 'gcloud info'
-
       - name: Decode JSON secret credentials
         env:
           TF_VAR_GCP_CREDENTIALS: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
