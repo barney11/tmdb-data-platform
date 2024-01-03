@@ -51,7 +51,7 @@ jobs:
         run: |
           terraform plan -out=tfplan\
             -var tmdb_api_key=$TF_VAR_TMDB_API_KEY\
-            -var gcp_credentials_json=decoded.json\
+            -var gcp_credentials_json="decoded.json"\
             -var project_id=$TF_VAR_PROJECT_ID\
             -var project_number=$TF_VAR_PROJECT_NUMBER\
             -var dataset_name=$TF_VAR_DATASET_NAME\
