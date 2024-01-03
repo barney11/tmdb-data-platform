@@ -30,7 +30,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan --var-file=terraform.tfvars
+        run: terraform plan -out=tfplan --var-file=tmdb_data_platform/terraform/terraform.tfvars
 
       - name: Terraform Apply
         run: terraform apply "tfplan"
