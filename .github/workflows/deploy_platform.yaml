@@ -6,14 +6,8 @@ on:
       - main
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-     run:
-       shell: bash
-       # We keep Terraform files in the terraform directory.
-       working-directory: ./tmdb_data_platform/terraform
 
     env:
       TF_VAR_PROJECT_ID: ${{ secrets.TF_VAR_PROJECT_ID }}
@@ -45,13 +39,15 @@ jobs:
         run: |
           echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > tmdb_data_platform/terraform/decoded.json
           
-      - name: Go to terraform files
-        run: cd tmdb_data_platform/terraform
+      # - name: Go to terraform files
+      #   run: cd tmdb_data_platform/terraform
 
       - name: Initialize Terraform
+        working-directory: ./tmdb_data_platform/terraform
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./tmdb_data_platform/terraform
         run: |
           terraform plan -out=tfplan\
             -var tmdb_api_key=$TF_VAR_TMDB_API_KEY\
@@ -64,4 +60,5 @@ jobs:
             -var cloud_functions_bucket_name=$TF_VAR_CF_BUCKET_NAME
 
       - name: Terraform Apply
+        working-directory: ./tmdb_data_platform/terraform
         run: terraform apply "tfplan"
