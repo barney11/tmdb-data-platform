@@ -3,6 +3,8 @@ Movies data platform on Google Cloud Platform (GCP), using serverless services.
 
 # Overview
 
+![Project Overview](https://github.com/barney11/tmdb-data-platform/blob/main/docs/gcp_platform_overview.png)
+
 This platform automatically extracts and processes movie-related data from The Movie Database (TMDb) API, with the following steps :
 
 - Data <u>extraction</u> from TMDb API and storage in a __Cloud Storage__ bucket
