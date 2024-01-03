@@ -32,6 +32,12 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      - name: Decode JSON secret credentials
+      env:
+        TF_VAR_GCP_CREDENTIALS: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
+      run: |
+        echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > decoded.json
           
       - name: Go to terraform files
         run: cd tmdb_data_platform/terraform
@@ -43,7 +49,7 @@ jobs:
         run: terraform plan \
           -out=tfplan \
           -var tmdb_api_key=$TF_VAR_TMDB_API_KEY \
-          -var gcp_credentials_json=$TF_VAR_GCP_CREDENTIALS \
+          -var gcp_credentials_json=decoded.json \
           -var project_id=$TF_VAR_PROJECT_ID \
           -var project_number=$TF_VAR_PROJECT_NUMBER \
           -var dataset_name=$TF_VAR_DATASET_NAME \
