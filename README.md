@@ -16,6 +16,8 @@ Curated data rendering is done with __Looker Studio__. The following looker stud
 
 [Looker Studio report link](https://lookerstudio.google.com/reporting/734e22f6-09ae-4210-a47d-40d88755ebb2)
 
+The infrastructure is deployed continuously using Terraform and a Github Actions workflow. 
+
 __Note :__ A high level code quality is provided by using `Isort`, `Black`, `Flake8`, `Pylint` linting tools and pre-commit hooks. 
 
 # Getting started
