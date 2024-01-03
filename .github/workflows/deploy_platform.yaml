@@ -37,7 +37,7 @@ jobs:
         env:
           TF_VAR_GCP_CREDENTIALS: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
         run: |
-          echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > decoded.json
+          echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > tmdb_data_platform/terraform/decoded.json
           
       - name: Go to terraform files
         run: cd tmdb_data_platform/terraform
