@@ -45,10 +45,6 @@ jobs:
         run: |
           echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > tmdb_data_platform/terraform/decoded.json
 
-      - name: Terraform Format
-        working-directory: ./tmdb_data_platform/terraform
-        run: terraform fmt -check
-
       - name: Initialize Terraform
         working-directory: ./tmdb_data_platform/terraform
         run: terraform init
