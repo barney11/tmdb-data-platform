@@ -41,15 +41,15 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan \
-        -out=tfplan \
-        -var tmdb_api_key=$TF_VAR_TMDB_API_KEY \
-        -var gcp_credentials_json=$TF_VAR_GCP_CREDENTIALS \
-        -var project_id=$TF_VAR_PROJECT_ID \
-        -var project_number=$TF_VAR_PROJECT_NUMBER \
-        -var dataset_name=$TF_VAR_DATASET_NAME \
-        -var data_storage_bucket_name=$TF_VAR_DATA_STORAGE_BUCKET_NAME \
-        -var terraform_states_bucket_name=$TF_VAR_TF_STATES_BUCKET_NAME \
-        -var cloud_functions_bucket_name=$TF_VAR_CF_BUCKET_NAME
+          -out=tfplan \
+          -var tmdb_api_key=$TF_VAR_TMDB_API_KEY \
+          -var gcp_credentials_json=$TF_VAR_GCP_CREDENTIALS \
+          -var project_id=$TF_VAR_PROJECT_ID \
+          -var project_number=$TF_VAR_PROJECT_NUMBER \
+          -var dataset_name=$TF_VAR_DATASET_NAME \
+          -var data_storage_bucket_name=$TF_VAR_DATA_STORAGE_BUCKET_NAME \
+          -var terraform_states_bucket_name=$TF_VAR_TF_STATES_BUCKET_NAME \
+          -var cloud_functions_bucket_name=$TF_VAR_CF_BUCKET_NAME
 
       - name: Terraform Apply
         run: terraform apply "tfplan"
