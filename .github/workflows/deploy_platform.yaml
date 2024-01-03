@@ -34,10 +34,10 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
       - name: Decode JSON secret credentials
-      env:
-        TF_VAR_GCP_CREDENTIALS: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
-      run: |
-        echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > decoded.json
+        env:
+          TF_VAR_GCP_CREDENTIALS: ${{ secrets.TF_VAR_GCP_CREDENTIALS }}
+        run: |
+          echo "$TF_VAR_GCP_CREDENTIALS" | base64 --decode > decoded.json
           
       - name: Go to terraform files
         run: cd tmdb_data_platform/terraform
